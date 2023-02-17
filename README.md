@@ -146,16 +146,12 @@ If everything goes well, you should see **Server running on port 5000** in your 
 Now we need to open this port in EC2 Security Groups. Refer to Project 1 Step 1 – Installing the Nginx Web Server. There we created an inbound rule to open TCP port 80, you need to do the same for port 5000.
 
 Open up your browser and try to access your server’s Public IP or Public DNS name followed by port 5000:
-
-
-
-
-
-
+```
 http://<PublicIP-or-PublicDNS>:5000
+```
 Quick reminder how to get your server’s Public IP and public DNS name:
 1) You can find it in your AWS web console in EC2 details
 2) Run curl -s http://169.254.169.254/latest/meta-data/public-ipv4 for Public IP address or curl -s http://169.254.169.254/latest/meta-data/public-hostname for Public DNS name.
-
+![](https://github.com/beorel/WEB-STACK-IMPLEMENTATION-MERN-STACK-IN-AWS/blob/main/images/Screenshot%20(173).png)
 
 
