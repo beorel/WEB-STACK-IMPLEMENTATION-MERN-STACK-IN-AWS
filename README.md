@@ -1,12 +1,12 @@
 # WEB-STACK-IMPLEMENTATION-MERN-STACK-IN-AWS
-In this project, you are tasked to implement a web solution based on the MERN stack in AWS Cloud.
+In this project, you are tasked to implement a web solution based on the **MERN** stack in AWS Cloud.
 
 MERN Web stack consists of the following components:
 
-1. MongoDB: A document-based, No-SQL database used to store application data in a form of documents.
-2. ExpressJS: A server-side Web Application framework for Node.js.
-3. ReactJS: A frontend framework developed by Facebook. It is based on JavaScript, used to build User Interface (UI) components.
-4. Node.js: A JavaScript runtime environment. It is used to run JavaScript on a machine rather than in a browser.
+1. [MongoDB](https://www.mongodb.com/): A document-based, No-SQL database used to store application data in a form of documents.
+2. [ExpressJS](https://expressjs.com/): A server-side Web Application framework for Node.js.
+3. [ReactJS](https://reactjs.org/): A frontend framework developed by Facebook. It is based on [JavaScript](https://www.javascript.com/), used to build User Interface (UI) components.
+4. [Node.js](https://nodejs.org/en/): A JavaScript runtime environment. It is used to run JavaScript on a machine rather than in a browser.
 
 ### *Side Self Study*
 1. Make research what types of [Database Management Systems (DBMS) exist and what each type is more suitable for](https://www.alooma.com/blog/types-of-modern-databases). 
@@ -25,7 +25,7 @@ Upgrade ubuntu
 ```
 sudo apt upgrade
 ```
-Let’s get the location of Node.js software from Ubuntu repositories.
+Let’s get the location of Node.js software from [Ubuntu repositories](https://github.com/nodesource/distributions#deb).
 ```
 curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
 ```
@@ -35,7 +35,7 @@ Install Node.js with the command below
 ```
 sudo apt-get install -y nodejs
 ```
-Note: The command above installs both nodejs and npm. NPM is a package manager for Node like apt for Ubuntu, it is used to install Node modules & packages and to manage dependency conflicts.
+**Note**: The command above installs both **nodejs** and **npm**. [NPM](https://www.npmjs.com/) is a package manager for Node like **apt** for Ubuntu, it is used to install Node modules & packages and to manage dependency conflicts.
 
 Verify the node installation with the command below
 ```
@@ -51,29 +51,29 @@ Create a new directory for your To-Do project:
 ```
 mkdir Todo
 ```
-Run the command below to verify that the Todo directory is created with ls command
+Run the command below to verify that the **Todo** directory is created with **ls** command
 ```
 ls
 ```
-TIP: In order to see some more useful information about files and directories, you can use following combination of keys ls -lih – it will show you different properties and size in human readable format. 
+**TIP**: In order to see some more useful information about files and directories, you can use following combination of keys **ls -lih** – it will show you different properties and size in human readable format. 
 
-You can learn more about different useful keys for ls command with ls --help.
+You can learn more about different useful keys for **ls** command with **ls --help**.
 
 Now change your current directory to the newly created one:
 ```
 cd Todo
 ```
-Next, you will use the command npm init to initialise your project, so that a new file named package.json will be created. 
+Next, you will use the command **npm init** to initialise your project, so that a new file named **package.json** will be created. 
 
 This file will normally contain information about your application and the dependencies that it needs to run. 
-Follow the prompts after running the command. You can press Enter several times to accept default values, then accept to write out the package.json file by typing yes.
+Follow the prompts after running the command. You can press **Enter** several times to accept default values, then accept to write out the **package.json** file by typing **yes**.
 ```
 npm init
 ```
 ![](https://github.com/beorel/WEB-STACK-IMPLEMENTATION-MERN-STACK-IN-AWS/blob/main/images/Screenshot%20(169).png)
 
-Run the command ls to confirm that you have package.json file created.
-Next, we will Install ExpressJs and create the Routes directory.
+Run the command **ls** to confirm that you have package.json file created.
+Next, we will Install **ExpressJs** and create the **Routes** directory.
 
 
 
