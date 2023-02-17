@@ -91,13 +91,13 @@ To use express, install it using npm:
 ```
 npm install express
 ```
-Now create a file index.js with the command below
+Now create a file **index.js** with the command below
 ```
 touch index.js
 ```
-Run ls to confirm that your index.js file is successfully created
+Run **ls** to confirm that your index.js file is successfully created
 
-Install the dotenv module
+Install the **dotenv** module
 ```
 npm install dotenv
 ```
@@ -144,11 +144,11 @@ node index.js
 If everything goes well, you should see **Server running on port 5000** in your terminal.
 ![](https://github.com/beorel/WEB-STACK-IMPLEMENTATION-MERN-STACK-IN-AWS/blob/main/images/Screenshot%20(171).png)
 Now we need to open this port in EC2 Security Groups. Refer to Project 1 Step 1 – Installing the Nginx Web Server. There we created an inbound rule to open TCP port 80, you need to do the same for port 5000.
+![](https://github.com/beorel/WEB-STACK-IMPLEMENTATION-MERN-STACK-IN-AWS/blob/main/images/Screenshot%20(172).png)
 
 Open up your browser and try to access your server’s Public IP or Public DNS name followed by port 5000:
-```
-http://<PublicIP-or-PublicDNS>:5000
-```
+`http://<PublicIP-or-PublicDNS>:5000`
+
 Quick reminder how to get your server’s Public IP and public DNS name:
 1) You can find it in your AWS web console in EC2 details
 2) Run curl -s http://169.254.169.254/latest/meta-data/public-ipv4 for Public IP address or curl -s http://169.254.169.254/latest/meta-data/public-hostname for Public DNS name.
@@ -164,19 +164,19 @@ Display list of all tasks
 
 Delete a completed task
 
-Each task will be associated with some particular endpoint and will use different standard HTTP request methods: POST, GET, DELETE.
+Each task will be associated with some particular endpoint and will use different standard [HTTP request methods](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods): POST, GET, DELETE.
 
-For each task, we need to create routes that will define various endpoints that the To-do app will depend on. So let us create a folder routes
+For each task, we need to create [routes](https://expressjs.com/en/guide/routing.html) that will define various endpoints that the **To-do** app will depend on. So let us create a folder **routes**
 ```
 mkdir routes
 ```
 Tip: You can open multiple shells in Putty or Linux/Mac to connect to the same EC2
 
-Change directory to routes folder.
+Change directory to **routes** folder.
 ```
 cd routes
 ```
-Now, create a file api.js with the command below
+Now, create a file **api.js** with the command below
 ```
 touch api.js
 ```
@@ -268,6 +268,185 @@ const Todo = mongoose.model('todo', TodoSchema);
 
 module.exports = Todo;
 ```
+Now we need to update our routes from the file **api.js** in ‘routes’ directory to make use of the new model.
+
+In Routes directory, open api.js with **vim api.js**, delete the code inside with **:%d** command and paste there code below into it then save and exit
+```
+const express = require ('express');
+const router = express.Router();
+const Todo = require('../models/todo');
 
 
+router.get('/todos', (req, res, next) => {
 
+
+//this will return all the data, exposing only the id and action field to the client
+Todo.find({}, 'action')
+.then(data => res.json(data))
+.catch(next)
+});
+
+
+router.post('/todos', (req, res, next) => {
+if(req.body.action){
+Todo.create(req.body)
+.then(data => res.json(data))
+.catch(next)
+}else {
+res.json({
+error: "The input field is empty"
+})
+}
+});
+
+
+router.delete('/todos/:id', (req, res, next) => {
+Todo.findOneAndDelete({"_id": req.params.id})
+.then(data => res.json(data))
+.catch(next)
+})
+
+
+module.exports = router;
+```
+The next piece of our application will be the **MongoDB Database**
+
+## MONGODB DATABASE
+MongoDB Database
+
+We need a database where we will store our data. For this, we will make use of **mLab**. 
+
+mLab provides MongoDB database as a service solution [(DBaaS)](https://en.wikipedia.org/wiki/Cloud_database), so to make life easy, you will need to sign up for shared clusters free account, which is ideal for our use case. [Sign up here](https://www.mongodb.com/atlas-signup-from-mlab). 
+
+Follow the signup process, select **AWS** as the cloud provider, and choose a region near you.
+
+*Allow access to the MongoDB database from anywhere (Not secure, but it is ideal for testing)*
+
+**IMPORTANT NOTE**
+
+In the image below, make sure you change the time of deleting the entry from 6 Hours to 1 Week
+![](https://github.com/beorel/WEB-STACK-IMPLEMENTATION-MERN-STACK-IN-AWS/blob/main/images/Screenshot%20(175).png)
+
+Create a MongoDB database and collection inside mLab
+
+![](https://github.com/beorel/WEB-STACK-IMPLEMENTATION-MERN-STACK-IN-AWS/blob/main/images/Screenshot%20(176).png)
+
+also
+
+![](https://github.com/beorel/WEB-STACK-IMPLEMENTATION-MERN-STACK-IN-AWS/blob/main/images/Screenshot%20(174).png)
+
+In the **index.js** file, we specified **process.env** to access environment variables, but we have not yet created this file. So we need to do that now.
+
+Create a file in your **Todo** directory and name it **.env**.
+```
+touch .env
+```
+then
+```
+vi .env
+```
+Add the connection string to access the database in it, just as below:
+```
+DB = 'mongodb+srv://<username>:<password>@<network-address>/<dbname>?retryWrites=true&w=majority'
+```
+Ensure to update <**username>**, <**password>**, <**network-address>** and <**database>** according to your setup
+Here is how to get your connection string
+![](https://github.com/beorel/WEB-STACK-IMPLEMENTATION-MERN-STACK-IN-AWS/blob/main/images/Screenshot%20(176).png)
+
+Now we need to update the **index.js** to reflect the use of **.env** so that Node.js can connect to the database.
+
+Simply delete existing content in the file, and update it with the entire code below.
+
+To do that using **vim**, follow below steps
+
+1. Open the file with **vim index.js**
+2. Press **esc**
+3. Type **:**
+4. Type **%d**
+5. Hit **‘Enter’**
+The entire content will be deleted, then,
+6. Press **i** to enter the insert mode in vim
+7. Now, paste the entire code below in the file.
+```
+const express = require('express');
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+const routes = require('./routes/api');
+const path = require('path');
+require('dotenv').config();
+
+
+const app = express();
+
+
+const port = process.env.PORT || 5000;
+
+
+//connect to the database
+mongoose.connect(process.env.DB, { useNewUrlParser: true, useUnifiedTopology: true })
+.then(() => console.log(`Database connected successfully`))
+.catch(err => console.log(err));
+
+
+//since mongoose promise is depreciated, we overide it with node's promise
+mongoose.Promise = global.Promise;
+
+
+app.use((req, res, next) => {
+res.header("Access-Control-Allow-Origin", "\*");
+res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+next();
+});
+
+
+app.use(bodyParser.json());
+
+
+app.use('/api', routes);
+
+
+app.use((err, req, res, next) => {
+console.log(err);
+next();
+});
+
+
+app.listen(port, () => {
+console.log(`Server running on port ${port}`)
+});
+```
+Using environment variables to store information is considered more secure and best practice to separate configuration and secret data from the application, 
+
+instead of writing connection strings directly inside the **index.js** application file.
+
+Start your server using the command:
+```
+node index.js
+```
+
+You shall see a message **‘Database connected successfully’**, if so – we have our backend configured. Now we are going to test it.
+
+Testing Backend Code without Frontend using RESTful API
+
+So far we have written backend part of our **To-Do** application, and configured a database, but we do not have a frontend UI yet. We need ReactJS code to achieve that. 
+
+But during development, we will need a way to test our code using RESTfulL API. Therefore, we will need to make use of some API development client to test our code.
+
+In this project, we will use Postman to test our API.
+
+Click Install [Postman](https://www.getpostman.com/) to download and [install postman](https://www.getpostman.com/downloads/) on your machine.
+
+Click [HERE](https://www.youtube.com/watch?v=FjgYtQK_zLE) to learn how perform [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) operartions on Postman
+
+You should test all the API endpoints and make sure they are working. For the endpoints that require body, you should send JSON back with the necessary fields since it’s what we setup in our code.
+
+Now open your Postman, create a POST request to the API `http://<PublicIP-or-PublicDNS>:5000/api/todos`. This request sends a new task to our To-Do list so the application could store it in the database.
+
+Note: make sure your set header key `Content-Type` as `application/json`.
+
+Check the image below:
+![](https://github.com/beorel/WEB-STACK-IMPLEMENTATION-MERN-STACK-IN-AWS/blob/main/images/Screenshot%20(178).png)
+
+Create a `GET` request to your API on `http://<PublicIP-or-PublicDNS>:5000/api/todos`. This request retrieves all existing records from out To-do application (backend requests these records from the database and sends it us back as a response to GET request).
+
+  
