@@ -449,4 +449,48 @@ Check the image below:
 
 Create a `GET` request to your API on `http://<PublicIP-or-PublicDNS>:5000/api/todos`. This request retrieves all existing records from out To-do application (backend requests these records from the database and sends it us back as a response to GET request).
 
+**Optional task**: Try to figure out how to send a DELETE request to delete a task from out To-Do list.
+
+**Hint:** To delete a task – you need to send its ID as a part of DELETE request.
+
+By now you have tested backend part of our To-Do application and have made sure that it supports all three operations we wanted:
++ Display a list of tasks – HTTP GET request
++ Add a new task to the list – HTTP POST request
++ Delete an existing task from the list – HTTP DELETE request
+
+We have successfully created our Backend, now let go create the Frontend.
+
+## STEP 2 – FRONTEND CREATION
+Since we are done with the functionality we want from our backend and API, it is time to create a user interface for a Web client (browser) to interact with the application via API. 
+
+To start out with the frontend of the To-do app, we will use the create-react-app command to scaffold our app.
+
+In the same root directory as your backend code, which is the Todo directory, run:
+```
+npx create-react-app client
+```
+This will create a new folder in your Todo directory called client, where you will add all the react code.
+
+Running a React App
+
+Before testing the react app, there are some dependencies that need to be installed.
+
+Install concurrently. It is used to run more than one command simultaneously from the same terminal window.
+```
+npm install concurrently --save-dev
+```
+Install nodemon. It is used to run and monitor the server. If there is any change in the server code, nodemon will restart it automatically and load the new changes.
+```
+npm install nodemon --save-dev
+```
+In Todo folder open the package.json file. Change the highlighted part of the below screenshot and replace with the code below.
+```
+"scripts": {
+"start": "node index.js",
+"start-watch": "nodemon index.js",
+"dev": "concurrently \"npm run start-watch\" \"cd client && npm start\""
+},
+```
+
+![](https://github.com/beorel/WEB-STACK-IMPLEMENTATION-MERN-STACK-IN-AWS/blob/main/images/Screenshot%20(180).png)
   
